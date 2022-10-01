@@ -1,0 +1,23 @@
+Mi am facut un header separat pentru functiile pe care le foloses si in cel primit am mai bagat doua strucutri
+In fisierul s este doar parserul de linie si declaraea structurilor principale
+Task 0
+	Am facut un parser al liniei de comanda cu ajutorul unui while.
+	Citesc mereu prima linie a comenzii, si in fucntie de aceasta caut sa vad in ce caz 
+ma aflu(strtok si strcmp pentru fiecare caz). Pentru fiecare caz am facut cate o functie
+Task 1
+	Am creat o strucutra image pt header si info-ul imaginii si una pixels unde mi am stocat trei oceteti char pentru bitii de culoare(cerinta). In functia bmp_read mi-am citit toat strucutrile cu fread(primele doua linii). Dupa mi-am alocat matricea dinamic bitmap si am citit fiecare element in aceasta. Am dedus ca formula pentru padding este 4 - (3 * width % 4). Cand ma aflam in acest caz, la sfarsitul linii dadeam fseek cu numarul corespunzator de octeti. In subprogramul bmp_write am facut acelasi procedeu, numai ca in locul bitiilor de padding am pus 0 in cadrul fisierului aferent. Dupa amandoua operatiile am inchis fisierele apelate
+Task 2
+	Am creat o functie bmp_insert. Am facut minimul dintre widthurile si highturile matrciilor(cea inserata si cea din modul edit). Am adunat la cea inserata coordonatele din enunt pentru a le putea compara bine(se vede foarte bine grafic de ce trebuie sa compar cu + coordonata). In timp ce citesc matricea pentru inserat imi transfer elementele din aceasta in cadrul matricii originale bitmap. Tot ce mai trebuie sa fac e sa vad in ce caz ma aflu. Am realizat ca sunt 4 cazuri existente:
+	1. Matrice inserata iese prin dreapta celei editate si are si padding:
+Penru acesata ma dedus formula cu care trebuie sa dau fseek pentru a ingnora partea din matrice peste care trebuie sa sar(care se afla in afara borderelor).(y + width.insert - width.edit)*3 + bitii de padding. Bitii de padding au formula data la taskul 1
+	2. Exact ca la cazul 1 insa fara bitii de padding
+	3. Matricea se poate insera in intregime peste imagine(sau sa fie taiata sus) si nu are padding. Petru aceasta nu am mai facut nimic.
+	4. Cazul 3 numai ca are padding, si folosesc(la fseek) forumla.
+	In cazul in care imaginea mea se duce peste borderul de sus am facut minimile intre imaginea inserata(height) si cea actuala. Din aceasta cauza nu va trebui sa ma omor cu fseek, pentru ca nu va trece peste niciodata si nici nu ma va interesa.
+Task3
+	In cadrul acestu task cea mai complicata parte a fost desenarea liniei. Pentru culoare mi am crea o noua strucutra draw_colors, unde mi am stocat culoarea si am mai declara si x_width. Am creat un subprogram draw_line, care va avea rolul de a crea linia. Prima data am vazut pe ce interval maximal sunt(ca si in exemplu) facand modulele(l am facut mai dubios, de mana).Acum voi da ca exemplu primul caz:absx < absy . In cazul acesta, y este maximal. Atunci il voi scrie pe x in functie de y ((i - y1) * (x2 - x1) + x1 * (y2 - y1)) / (y2 - y1) dedusa din ecuatia dreptei data .
+Astfel pentru fiecare x imi voi aflta y(primul for). In primul for voi pleca de la minimele dintre y pana la maximul dintre acestia(pentru a putea parcurge aferent linia). Dupa ce mi am dedus ecuatia dreptei, tot ce mai am sa fac este sa trasez widthul din jurul pixelului(adica grosimea). Am plecat la primul for dintre minimul dintre coord si 0 si maxim dintre coordonate si bordere in caz ca am o linie care imi iese din matrice. Am mai dedus niste conditii in caz ca linia trece de bordere(min si max).
+	Widthul pixelului aferen l-am facut cu doua foruri pentru a umple matricea de n*n. Am realizat ca trebuie sa plec de la coorodnatele acutale x-with_pen/2, y-width_pen/2 pana la x+with_pen/2 + 1, y+width_pen/2 + 1. Am facut si la acestea minimul cu 0 si maxinul cu borderele in caz ca imi iese si widthul din interiorul matricii. Un exemplu poate sa fie o linie care merege fix pana la sfarsitul matrcii. Widthul, indiferent cat va fii, va trece de border. Pentru acest caz sunt conditiile. Am realizat doua subprograme care vor face filurile.
+	Pentru triunghi si dreptunghi am apelat functia draw_line pentru coordonatele aferente.La dreptunghi am apelat de patru ori pentru 4 puncte(asa se realizaza un dreptunghu) si la triunghi am apelat de 3 ori.
+Task 4
+	La taskul 4 mi am facut o functie numita fill_colour. Mai intai mi am facut o noua structura de pixeli unde imi salvez pixelul curent. Apelez functia cu coordonatele, stucutra imaginii, cea de culori actuala si cea de culori de draw. In aceast functie realizez 4 apeluri recursive pentru fiecare pozitie, si dupa imi schimb culoare pentru aceasta pozitie. La fieacare am pus conditia de trecerii de border a matricii(in caz ca trebuie sa dau fill pana la capete). Si cam asta e tot programul.
